@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>{{.title}}</title>
+</head>
+<body>
+    <div class = "posts">
+        <div class = "post-content">
+            <p>{{.post.UserId}}</p>
+            <img src = "/assets/uploads/{{.post.ImageName}}" width="500" height="500">
+            <div class = "post-subtitle">
+                <p>Created At = {{.post.CreatedAt.Format "Jan 02, 2006"}}</p>
+                <p>Likes = {{.post.Likes}}</p>
+            </div>
+            <p>{{.post.Description}}</p>
+            <div class = "post-subtitle">
+                <a href="/{{.post.UserId}}/edit/{{.post.Id}}">
+                    <input type="submit" value="Edit"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css"></link>
+    <title>{{.title}}</title>
+</head>
+<body>
+    <a href="/add">
+        <input type="submit" value="Add Post"/>
+    </a>
+    <p>Total Posts Count = {{.count}}</p>
+    <div>
+        {{range $idx,$val := .pageCount}}
+        <a href = "/?idx={{$val}}">{{$val}}</a>
+        {{end}}
+    </div>
+    <div class = "posts">
+        {{range $idx, $val := .posts}}
+        <div class = "post-content">
+            <p>{{$val.UserId}}</p>
+            <a href="/{{$val.UserId}}/posts/{{$val.Id}}">
+                <img src = "/assets/uploads/{{$val.ImageName}}" width="250" height="250">
+            </a>
+                <div class = "post-subtitle">
+                    <p>{{$val.CreatedAt.Format "Jan 02, 2006"}}</p>
+                    <p>{{$val.Likes}}</p>
+                </div>
+                <p>{{$val.GetShortDescription}}</p>
+        </div>
+        {{end}}
+    </div>
+</body>
+</html>
