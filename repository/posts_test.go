@@ -1,10 +1,62 @@
 package repository
 
 import (
+	"instago/model"
 	testing "testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 )
+
+func TestRepository_GetCountTotalPosts(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("Err = %s", err)
+	}
+	defer db.Close()
+	mock.ExpectQuery("SELECT COUNT").WillReturnRows(sqlmock.NewRows([]string{"Count"}).AddRow(1))
+}
+
+func TestPostRepository_GetPostDetailsById(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error %s has occured", err)
+	}
+	defer db.Close()
+	var (
+		paramId     = 1
+		paramUserId = 1
+		rows        = []string{
+			"id",
+			"userId",
+			"likes",
+			"description",
+			"createdAt",
+			"updatedAt",
+			"imageName",
+		}
+		post = model.NewPost(paramId, paramUserId, 1, "test", time.Now(), time.Now(), "test.jpg")
+	)
+	mock.ExpectQuery("SELECT (.+) FROM posts WHERE id ").
+		WithArgs(paramId, paramUserId).
+		WillReturnRows(sqlmock.NewRows(rows).
+			AddRow(post.Id, post.UserId, post.Likes,
+				post.Description, post.CreatedAt, post.UpdatedAt, post.ImageName))
+	sql := "SELECT * FROM posts WHERE id = $1 AND \"userId\" = $2 LIMIT 1"
+	data, err := db.Query(sql, paramId, paramUserId)
+	if err != nil {
+		t.Fatalf("Error = %s", err)
+	}
+	defer data.Close()
+	assert.NotNil(t, data)
+	assert.Nil(t, err)
+
+	if err = mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("err = %s", err)
+	}
+
+}
 
 func TestPostRepository_UpdateDescription(t *testing.T) {
 	db, mock, err := sqlmock.New()
